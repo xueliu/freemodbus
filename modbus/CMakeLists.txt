@@ -1,6 +1,6 @@
 set(LIB freemodbus)
 
-add_library(${LIB} "")
+add_library(${LIB} "" )
 
 target_compile_definitions(
         ${LIB}
@@ -28,18 +28,28 @@ target_sources(
         ${CMAKE_CURRENT_LIST_DIR}/mb.c
         ${CMAKE_CURRENT_LIST_DIR}/ascii/mbascii.c
         ${CMAKE_CURRENT_LIST_DIR}/functions/mbfunccoils.c
+        ${CMAKE_CURRENT_LIST_DIR}/functions/mbfunccoils_m.c
         ${CMAKE_CURRENT_LIST_DIR}/functions/mbfuncdiag.c
         ${CMAKE_CURRENT_LIST_DIR}/functions/mbfuncdisc.c
+        ${CMAKE_CURRENT_LIST_DIR}/functions/mbfuncdisc_m.c
         ${CMAKE_CURRENT_LIST_DIR}/functions/mbfuncholding.c
+        ${CMAKE_CURRENT_LIST_DIR}/functions/mbfuncholding_m.c
         ${CMAKE_CURRENT_LIST_DIR}/functions/mbfuncinput.c
+        ${CMAKE_CURRENT_LIST_DIR}/functions/mbfuncinput_m.c
         ${CMAKE_CURRENT_LIST_DIR}/functions/mbfuncother.c
         ${CMAKE_CURRENT_LIST_DIR}/functions/mbutils.c
         ${CMAKE_CURRENT_LIST_DIR}/rtu/mbcrc.c
         ${CMAKE_CURRENT_LIST_DIR}/rtu/mbrtu.c
+        ${CMAKE_CURRENT_LIST_DIR}/rtu/mbrtu_m.c
+        ${CMAKE_CURRENT_LIST_DIR}/../demo/WIN32/user_mb_app.c
+        ${CMAKE_CURRENT_LIST_DIR}/../demo/WIN32/user_mb_app_m.c
         ${CMAKE_CURRENT_LIST_DIR}/../demo/WIN32/port/portevent.c
+        ${CMAKE_CURRENT_LIST_DIR}/../demo/WIN32/port/portevent_m.c
         ${CMAKE_CURRENT_LIST_DIR}/../demo/WIN32/port/portother.c
         ${CMAKE_CURRENT_LIST_DIR}/../demo/WIN32/port/portserial.c
+        ${CMAKE_CURRENT_LIST_DIR}/../demo/WIN32/port/portserial_m.c
         ${CMAKE_CURRENT_LIST_DIR}/../demo/WIN32/port/porttimer.c
+        ${CMAKE_CURRENT_LIST_DIR}/../demo/WIN32/port/porttimer_m.c
 )
 
 target_include_directories(
@@ -50,6 +60,7 @@ target_include_directories(
         $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/rtu>
         $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/tcp>
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/demo/WIN32/port>
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/demo/WIN32>
         $<INSTALL_INTERFACE:include>
         ${CMAKE_CURRENT_LIST_DIR}
         ${CMAKE_CURRENT_BINARY_DIR})

@@ -64,7 +64,7 @@ _tmain( int argc, _TCHAR * argv[] )
 
     const UCHAR     ucSlaveID[] = { 0xAA, 0xBB, 0xCC };
 
-    if( eMBInit( MB_RTU, 0x0A, 1, 38400, MB_PAR_EVEN ) != MB_ENOERR )
+    if( eMBInit( MB_RTU, 0x0A, 9, 115200, MB_PAR_EVEN ) != MB_ENOERR )
     {
         _ftprintf( stderr, _T( "%s: can't initialize modbus stack!\r\n" ), PROG );
         iExitCode = EXIT_FAILURE;
@@ -123,9 +123,13 @@ _tmain( int argc, _TCHAR * argv[] )
                 _tprintf( _T( "  'e' ... enabled the protocol stack\r\n" ) );
                 _tprintf( _T( "  's' ... show current status\r\n" ) );
                 _tprintf( _T( "  'q' ... quit applicationr\r\n" ) );
+                _tprintf( _T( "  'p' ... print current statistic values\r\n" ) );
                 _tprintf( _T( "  'h' ... this information\r\n" ) );
                 _tprintf( _T( "\r\n" ) );
                 _tprintf( _T( "Copyright 2006 Christian Walter <wolti@sil.at>\r\n" ) );
+                break;
+            case _TCHAR( 'p' ):
+                _tprintf( _T( "Print statistic values\r\n" ) );
                 break;
             default:
                 if( cCh != _TCHAR('\n') )

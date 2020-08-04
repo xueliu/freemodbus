@@ -58,12 +58,44 @@ typedef enum
     MB_PAR_EVEN                 /*!< Even parity. */
 } eMBParity;
 
+typedef enum
+{
+    EV_MASTER_READY                    = 1U<<0U,  /*!< Startup finished. */
+    EV_MASTER_FRAME_RECEIVED           = 1U<<1U,  /*!< Frame received. */
+    EV_MASTER_EXECUTE                  = 1U<<2U,  /*!< Execute function. */
+    EV_MASTER_FRAME_SENT               = 1U<<3U,  /*!< Frame sent. */
+    EV_MASTER_ERROR_PROCESS            = 1U<<4U,  /*!< Frame error process. */
+    EV_MASTER_PROCESS_SUCESS           = 1U<<5U,  /*!< Request process success. */
+    EV_MASTER_ERROR_RESPOND_TIMEOUT    = 1U<<6U,  /*!< Request respond timeout. */
+    EV_MASTER_ERROR_RECEIVE_DATA       = 1U<<7U,  /*!< Request receive data error. */
+    EV_MASTER_ERROR_EXECUTE_FUNCTION   = 1U<<8U,  /*!< Request execute function error. */
+} eMBMasterEventType;
+
+typedef enum
+{
+    EV_ERROR_RESPOND_TIMEOUT,         /*!< Slave respond timeout. */
+    EV_ERROR_RECEIVE_DATA,            /*!< Receive frame data erroe. */
+    EV_ERROR_EXECUTE_FUNCTION,        /*!< Execute function error. */
+} eMBMasterErrorEventType;
+
 /* ----------------------- Supporting functions -----------------------------*/
 BOOL            xMBPortEventInit( void );
 
 BOOL            xMBPortEventPost( eMBEventType eEvent );
 
 BOOL            xMBPortEventGet(  /*@out@ */ eMBEventType * eEvent );
+
+BOOL            xMBMasterPortEventInit( void );
+
+BOOL            xMBMasterPortEventPost( eMBMasterEventType eEvent );
+
+BOOL            xMBMasterPortEventGet(  /*@out@ */ eMBMasterEventType * eEvent );
+
+void            vMBMasterOsResInit( void );
+
+BOOL            xMBMasterRunResTake( int time );
+
+void            vMBMasterRunResRelease( void );
 
 /* ----------------------- Serial port functions ----------------------------*/
 
@@ -80,6 +112,19 @@ BOOL            xMBPortSerialGetByte( CHAR * pucByte );
 
 BOOL            xMBPortSerialPutByte( CHAR ucByte );
 
+BOOL            xMBMasterPortSerialInit( UCHAR ucPort, ULONG ulBaudRate,
+                                         UCHAR ucDataBits, eMBParity eParity );
+
+void            vMBMasterPortClose( void );
+
+void            xMBMasterPortSerialClose( void );
+
+void            vMBMasterPortSerialEnable( BOOL xRxEnable, BOOL xTxEnable );
+
+INLINE BOOL     xMBMasterPortSerialGetByte( CHAR * pucByte );
+
+INLINE BOOL     xMBMasterPortSerialPutByte( CHAR ucByte );
+
 /* ----------------------- Timers functions ---------------------------------*/
 BOOL            xMBPortTimersInit( USHORT usTimeOut50us );
 
@@ -90,6 +135,18 @@ void            vMBPortTimersEnable( void );
 void            vMBPortTimersDisable( void );
 
 void            vMBPortTimersDelay( USHORT usTimeOutMS );
+
+BOOL            xMBMasterPortTimersInit( USHORT usTimeOut50us );
+
+void            xMBMasterPortTimersClose( void );
+
+void            vMBMasterPortTimersT35Enable( void );
+
+void            vMBMasterPortTimersConvertDelayEnable( void );
+
+void            vMBMasterPortTimersRespondTimeoutEnable( void );
+
+void            vMBMasterPortTimersDisable( void );
 
 /* ----------------------- Callback for the protocol stack ------------------*/
 

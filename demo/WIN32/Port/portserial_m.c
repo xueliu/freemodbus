@@ -49,7 +49,7 @@ LPTSTR          Error2String( DWORD dwError );
 
 /* ----------------------- Begin implementation -----------------------------*/
 void
-vMBPortSerialEnable( BOOL bEnableRx, BOOL bEnableTx )
+vMBMasterPortSerialEnable( BOOL bEnableRx, BOOL bEnableTx )
 {
     /* it is not allowed that both receiver and transmitter are enabled. */
     assert( !bEnableRx || !bEnableTx );
@@ -76,7 +76,7 @@ vMBPortSerialEnable( BOOL bEnableRx, BOOL bEnableTx )
 }
 
 BOOL
-xMBPortSerialInit( UCHAR ucPort, ULONG ulBaudRate, UCHAR ucDataBits,
+xMBMasterPortSerialInit( UCHAR ucPort, ULONG ulBaudRate, UCHAR ucDataBits,
                    eMBParity eParity )
 {
     TCHAR           szDevice[8];
@@ -147,8 +147,8 @@ xMBPortSerialInit( UCHAR ucPort, ULONG ulBaudRate, UCHAR ucDataBits,
 
         /* Open the serial device. */
         g_hSerial =
-            CreateFile( szDevice, GENERIC_READ | GENERIC_WRITE, 0, NULL,
-                        OPEN_EXISTING, 0, NULL );
+                CreateFile( szDevice, GENERIC_READ | GENERIC_WRITE, 0, NULL,
+                            OPEN_EXISTING, 0, NULL );
 
 
         if( g_hSerial == INVALID_HANDLE_VALUE )
@@ -160,7 +160,7 @@ xMBPortSerialInit( UCHAR ucPort, ULONG ulBaudRate, UCHAR ucDataBits,
         else if( !SetCommState( g_hSerial, &dcb ) )
         {
             vMBPortLog( MB_LOG_ERROR, _T( "SER-INIT" ),
-                        _T( "Can't set settings for serial device %s: %s" ), 
+                        _T( "Can't set settings for serial device %s: %s" ),
                         szDevice, Error2String( GetLastError( ) ) );
             bStatus = FALSE;
         }
@@ -182,12 +182,12 @@ xMBPortSerialInit( UCHAR ucPort, ULONG ulBaudRate, UCHAR ucDataBits,
 }
 
 BOOL
-xMBPortSerialSetTimeout( DWORD dwTimeoutMs )
+xMBMasterPortSerialSetTimeout( DWORD dwTimeoutMs )
 {
     BOOL            bStatus;
     COMMTIMEOUTS    cto;
 
-    /* usTimeOut is the inter character timeout used to detect the end 
+    /* usTimeOut is the inter character timeout used to detect the end
      * of frame. The total timeout is set to 50ms to make sure we
      * can exit the blocking read. */
     cto.ReadIntervalTimeout = dwTimeoutMs;
@@ -198,9 +198,9 @@ xMBPortSerialSetTimeout( DWORD dwTimeoutMs )
 
     if( !SetCommTimeouts( g_hSerial, &cto ) )
     {
-         vMBPortLog( MB_LOG_ERROR, _T( "SER-INIT" ),
-                     _T( "Can't set timeouts for serial device: %s" ),
-                     Error2String( GetLastError( ) ) );
+        vMBPortLog( MB_LOG_ERROR, _T( "SER-INIT" ),
+                    _T( "Can't set timeouts for serial device: %s" ),
+                    Error2String( GetLastError( ) ) );
         bStatus = FALSE;
     }
     else
@@ -212,13 +212,13 @@ xMBPortSerialSetTimeout( DWORD dwTimeoutMs )
 }
 
 void
-vMBPortClose ( void )
+vMBMasterPortClose ( void )
 {
     ( void )CloseHandle( g_hSerial );
 }
 
 BOOL
-xMBPortSerialPoll(  )
+xMBMasterPortSerialPoll(  )
 {
     BOOL            bStatus = TRUE;
     DWORD           dwBytesRead;
@@ -266,7 +266,7 @@ xMBPortSerialPoll(  )
         }
         dwBytesWritten = 0;
         if( !WriteFile
-            ( g_hSerial, &ucBuffer[0], uiTxBufferPos, &dwBytesWritten, NULL )
+                ( g_hSerial, &ucBuffer[0], uiTxBufferPos, &dwBytesWritten, NULL )
             || ( dwBytesWritten != uiTxBufferPos ) )
         {
             vMBPortLog( MB_LOG_ERROR, _T( "SER-POLL" ), _T( "I/O error on serial device: %s" ),
@@ -279,7 +279,7 @@ xMBPortSerialPoll(  )
 }
 
 BOOL
-xMBPortSerialPutByte( CHAR ucByte )
+xMBMasterPortSerialPutByte( CHAR ucByte )
 {
     assert( uiTxBufferPos < BUF_SIZE );
     ucBuffer[uiTxBufferPos] = ucByte;
@@ -288,7 +288,7 @@ xMBPortSerialPutByte( CHAR ucByte )
 }
 
 BOOL
-xMBPortSerialGetByte( CHAR * pucByte )
+xMBMasterPortSerialGetByte( CHAR * pucByte )
 {
     assert( uiRxBufferPos < BUF_SIZE );
     *pucByte = ucBuffer[uiRxBufferPos];
